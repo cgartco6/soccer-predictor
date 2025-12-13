@@ -1,0 +1,114 @@
+# Soccer Prediction System Configuration
+
+database:
+  host: localhost
+  port: 5432
+  database: soccer_predictor
+  user: postgres
+  password: your_password
+  pool_size: 20
+  max_overflow: 30
+  echo: false
+
+scrapers:
+  hollywoodbets:
+    url: "https://www.hollywoodbets.net"
+    enabled: true
+    rate_limit_delay: 2.0
+    retry_attempts: 3
+    request_timeout: 30
+  betway:
+    url: "https://www.betway.co.za"
+    enabled: true
+    rate_limit_delay: 2.0
+    retry_attempts: 3
+    request_timeout: 30
+  football_data:
+    enabled: true
+    sources:
+      espn: "https://www.espn.com/soccer"
+      whoscored: "https://www.whoscored.com"
+      transfermarkt: "https://www.transfermarkt.com"
+      sofascore: "https://www.sofascore.com"
+
+models:
+  model_type: "ensemble"
+  features:
+    - home_form_last_5
+    - away_form_last_5
+    - home_avg_goals_scored
+    - away_avg_goals_scored
+    - home_avg_goals_conceded
+    - away_avg_goals_conceded
+    - home_home_strength
+    - away_away_strength
+    - h2h_home_wins
+    - h2h_draws
+    - h2h_away_wins
+    - home_key_players_available
+    - away_key_players_available
+    - home_injury_impact
+    - away_injury_impact
+    - home_coach_win_rate
+    - away_coach_win_rate
+    - weather_impact
+    - pitch_condition_score
+    - crowd_factor
+    - referee_home_bias
+    - referee_avg_cards
+    - implied_prob_home
+    - implied_prob_draw
+    - implied_prob_away
+    - days_since_last_match_home
+    - days_since_last_match_away
+    - league_avg_goals
+    - league_home_advantage
+    - goal_expectancy_home
+    - goal_expectancy_away
+    - strength_difference
+    - btts_probability
+  target_columns:
+    - result
+    - btts_result
+  test_size: 0.2
+  validation_size: 0.1
+  random_state: 42
+  ensemble_models:
+    - xgb
+    - lgbm
+    - rf
+    - catboost
+  retrain_frequency_days: 7
+  min_training_samples: 100
+
+prediction:
+  min_confidence: 0.65
+  min_confidence_btts: 0.60
+  value_threshold: 1.1
+  max_recommendations_per_match: 3
+  kelly_fraction: 0.25
+  min_odds_value: 1.5
+
+api:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8000
+  debug: true
+  workers: 4
+  cors_origins:
+    - "*"
+  api_key_header: "X-API-Key"
+  rate_limit_per_minute: 60
+
+logging:
+  level: "INFO"
+  file: "logs/soccer_predictor.log"
+  max_size_mb: 100
+  backup_count: 5
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+monitoring:
+  prometheus_enabled: false
+  metrics_port: 9090
+  health_check_interval: 300
