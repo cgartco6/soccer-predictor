@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: soccer_predictor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgresql://postgres:your_password@postgres:5432/soccer_predictor
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    command: python main.py
+
+  celery:
+    build: .
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:your_password@postgres:5432/soccer_predictor
+      REDIS_URL: redis://redis:6379/0
+    command: celery -A tasks.celery_app worker --loglevel=info
+
+  flower:
+    image: mher/flower
+    depends_on:
+      - celery
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+    ports:
+      - "5555:5555"
+
+volumes:
+  postgres_data:
