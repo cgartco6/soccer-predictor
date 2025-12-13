@@ -1,0 +1,20 @@
+
+## Key Features Implemented:
+
+1. **Comprehensive Data Collection**: Scrapers for Hollywoodbets, Betway, and football data
+2. **Advanced Feature Engineering**: 50+ features including all requested factors
+3. **AI Models**: Ensemble models for both match result and BTTS predictions
+4. **Continuous Learning**: Models update automatically with new data
+5. **Value Bet Detection**: Identifies profitable opportunities
+6. **Production Ready**: Docker, logging, monitoring, API
+7. **Extensible**: Easy to add new teams and features
+
+## To Use the System:
+
+1. Install Docker and Docker Compose
+2. Update `config.yaml` with your settings
+3. Run `docker-compose up -d`
+4. The system will automatically start scraping and predicting
+5. Access predictions via API or check logs
+
+The system will continuously improve its predictions as it collects more data and learns from actual results. You can add custom teams through the API, and all features will be calculated automatically for predictions.
