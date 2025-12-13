@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Prediction AI - Complete System</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #ecf0f1;
+            --dark-text: #2c3e50;
+            --light-text: #ecf0f1;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 0;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h2 {
+            color: var(--primary-color);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid #e0e0e0;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        /* Prediction Cards */
+        .prediction-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .teams {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .vs {
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .prediction-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .prediction-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .prediction-item .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .prediction-item .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .confidence-meter {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        /* Progress Bars */
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background: var(--light-bg);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">⚽</div>
+                <h1>Soccer Prediction AI</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#predictions" class="nav-link">Predictions</a>
+                <a href="#teams" class="nav-link">Teams</a>
+                <a href="#ai-model" class="nav-link">AI Model</a>
+                <a href="#settings" class="nav-link">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>System Status</h3>
+                    <div id="systemStatus" class="alert alert-success">
+                        <span>✅ System Running</span>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">AI Accuracy</div>
+                            <div class="card-value" id="aiAccuracy">76.5%</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="accuracyBar" style="width: 76.5%; background: var(--success-color);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Quick Actions</h3>
+                    <button class="btn btn-primary w-100" onclick="runPredictions()">
+                        <span>📊</span> Run Predictions
+                    </button>
+                    <button class="btn btn-success w-100" onclick="scrapeNewData()" style="margin-top: 10px;">
+                        <span>🔄</span> Update Data
+                    </button>
+                    <button class="btn btn-warning w-100" onclick="retrainAI()" style="margin-top: 10px;">
+                        <span>🤖</span> Retrain AI
+                    </button>
+                    <button class="btn btn-danger w-100" onclick="showAddTeamModal()" style="margin-top: 10px;">
+                        <span>➕</span> Add Team
+                    </button>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Today's Stats</h3>
+                    <div class="stats-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Matches</div>
+                                <div class="card-value" id="totalMatches">0</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Predictions</div>
+                                <div class="card-value" id="totalPredictions">0</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Value Bets</div>
+                                <div class="card-value" id="valueBets">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Dashboard -->
+            <main class="dashboard">
+                <div class="dashboard-header">
+                    <h2>Today's Predictions</h2>
+                    <div class="dashboard-controls">
+                        <select id="leagueFilter" class="form-control" style="width: 200px; display: inline-block;">
+                            <option value="all">All Leagues</option>
+                            <option value="premier">Premier League</option>
+                            <option value="la-liga">La Liga</option>
+                            <option value="serie-a">Serie A</option>
+                            <option value="bundesliga">Bundesliga</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="filterMatches()">Filter</button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('predictions')">Predictions</div>
+                    <div class="tab" onclick="switchTab('matches')">Today's Matches</div>
+                    <div class="tab" onclick="switchTab('analysis')">AI Analysis</div>
+                    <div class="tab" onclick="switchTab('performance')">Performance</div>
+                </div>
+
+                <!-- Predictions Tab -->
+                <div id="predictionsTab" class="tab-content active">
+                    <div id="predictionsContainer">
+                        <!-- Predictions will be loaded here -->
+                        <div class="spinner" id="loadingSpinner"></div>
+                    </div>
+                </div>
+
+                <!-- Matches Tab -->
+                <div id="matchesTab" class="tab-content">
+                    <div id="matchesContainer">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Home Team</th>
+                                    <th>Away Team</th>
+                                    <th>League</th>
+                                    <th>Odds (H/D/A)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matchesTableBody">
+                                <!-- Matches will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Analysis Tab -->
+                <div id="analysisTab" class="tab-content">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Feature Importance</div>
+                            </div>
+                            <div id="featureImportance">
+                                <!-- Feature importance chart will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">AI Model Performance</div>
+                            </div>
+                            <canvas id="performanceChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-top: 20px;">
+                        <div class="card-header">
+                            <div class="card-title">Real-time AI Learning</div>
+                        </div>
+                        <div id="learningLogs">
+                            <!-- Learning logs will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Tab -->
+                <div id="performanceTab" class="tab-content">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Accuracy Over Time</div>
+                            </div>
+                            <canvas id="accuracyChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Profit/Loss Tracking</div>
+                            </div>
+                            <canvas id="profitChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-top: 20px;">
+                        <div class="card-header">
+                            <div class="card-title">Recent Performance</div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Predictions</th>
+                                    <th>Correct</th>
+                                    <th>Accuracy</th>
+                                    <th>Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="performanceTable">
+                                <!-- Performance data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Team Modal -->
+    <div id="addTeamModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Team</h2>
+                <button class="close-modal" onclick="closeModal('addTeamModal')">&times;</button>
+            </div>
+            <form id="addTeamForm" onsubmit="addNewTeam(event)">
+                <div class="form-group">
+                    <label for="teamName">Team Name *</label>
+                    <input type="text" id="teamName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="teamCountry">Country</label>
+                    <input type="text" id="teamCountry" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="teamLeague">League</label>
+                    <input type="text" id="teamLeague" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="stadium">Stadium</label>
+                    <input type="text" id="stadium" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="strengthRating">Strength Rating (1-100)</label>
+                    <input type="number" id="strengthRating" class="form-control" min="1" max="100" value="50">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Add Team</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Prediction Details Modal -->
+    <div id="predictionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detailed Prediction Analysis</h2>
+                <button class="close-modal" onclick="closeModal('predictionModal')">&times;</button>
+            </div>
+            <div id="predictionDetails">
+                <!-- Detailed prediction analysis will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let soccerAI = null;
+        let matchesData = [];
+        let predictionsData = [];
+        let teamsData = [];
+        let charts = {};
+
+        // Soccer AI System
+        class SoccerPredictionAI {
+            constructor() {
+                this.model = {
+                    weights: {},
+                    features: {},
+                    accuracy: 0.765,
+                    version: "1.0.0",
+                    lastTrained: new Date()
+                };
+                this.teams = {};
+                this.predictions = [];
+                this.history = [];
+                this.initialize();
+            }
+
+            initialize() {
+                console.log("Initializing Soccer Prediction AI...");
+                this.loadSampleData();
+                this.initializeModel();
+                this.updateSystemStats();
+            }
+
+            loadSampleData() {
+                // Sample teams data
+                this.teams = {
+                    'Manchester United': { strength: 85, form: 0.7, homeAdvantage: 0.8 },
+                    'Liverpool': { strength: 88, form: 0.8, homeAdvantage: 0.75 },
+                    'Manchester City': { strength: 92, form: 0.9, homeAdvantage: 0.85 },
+                    'Chelsea': { strength: 82, form: 0.65, homeAdvantage: 0.7 },
+                    'Arsenal': { strength: 80, form: 0.75, homeAdvantage: 0.75 },
+                    'Tottenham': { strength: 78, form: 0.6, homeAdvantage: 0.7 }
+                };
+
+                // Sample matches data
+                matchesData = [
+                    {
+                        id: 1,
+                        homeTeam: 'Manchester United',
+                        awayTeam: 'Liverpool',
+                        league: 'Premier League',
+                        time: '15:00',
+                        odds: { home: 2.5, draw: 3.2, away: 2.8, bttsYes: 1.8, bttsNo: 2.0 },
+                        weather: 'Clear',
+                        pitch: 'Good'
+                    },
+                    {
+                        id: 2,
+                        homeTeam: 'Manchester City',
+                        awayTeam: 'Chelsea',
+                        league: 'Premier League',
+                        time: '17:30',
+                        odds: { home: 1.8, draw: 3.6, away: 4.2, bttsYes: 1.6, bttsNo: 2.3 },
+                        weather: 'Rainy',
+                        pitch: 'Wet'
+                    },
+                    {
+                        id: 3,
+                        homeTeam: 'Arsenal',
+                        awayTeam: 'Tottenham',
+                        league: 'Premier League',
+                        time: '20:00',
+                        odds: { home: 2.1, draw: 3.4, away: 3.5, bttsYes: 1.7, bttsNo: 2.1 },
+                        weather: 'Cloudy',
+                        pitch: 'Good'
+                    }
+                ];
+
+                teamsData = Object.keys(this.teams).map(name => ({
+                    name,
+                    ...this.teams[name]
+                }));
+            }
+
+            initializeModel() {
+                // Initialize model weights based on features
+                this.model.weights = {
+                    homeStrength: 0.3,
+                    awayStrength: 0.25,
+                    homeForm: 0.15,
+                    awayForm: 0.1,
+                    homeAdvantage: 0.2,
+                    weatherImpact: 0.05,
+                    pitchCondition: 0.05,
+                    h2hRecord: 0.1,
+                    injuryImpact: 0.1
+                };
+            }
+
+            calculateFeatures(match) {
+                const homeTeam = this.teams[match.homeTeam];
+                const awayTeam = this.teams[match.awayTeam];
+                
+                if (!homeTeam || !awayTeam) {
+                    return null;
+                }
+
+                return {
+                    homeStrength: homeTeam.strength / 100,
+                    awayStrength: awayTeam.strength / 100,
+                    homeForm: homeTeam.form,
+                    awayForm: awayTeam.form,
+                    homeAdvantage: homeTeam.homeAdvantage,
+                    weatherImpact: this.getWeatherImpact(match.weather),
+                    pitchCondition: this.getPitchCondition(match.pitch),
+                    h2hRecord: this.getH2HRecord(match.homeTeam, match.awayTeam),
+                    injuryImpact: this.getInjuryImpact(match.homeTeam, match.awayTeam)
+                };
+            }
+
+            getWeatherImpact(weather) {
+                const impacts = {
+                    'Clear': 1.0,
+                    'Cloudy': 0.95,
+                    'Rainy': 0.8,
+                    'Snow': 0.6,
+                    'Windy': 0.85
+                };
+                return impacts[weather] || 1.0;
+            }
+
+            getPitchCondition(condition) {
+                const conditions = {
+                    'Excellent': 1.0,
+                    'Good': 0.95,
+                    'Average': 0.85,
+                    'Wet': 0.75,
+                    'Poor': 0.6
+                };
+                return conditions[condition] || 0.85;
+            }
+
+            getH2HRecord(homeTeam, awayTeam) {
+                // Simulated head-to-head record
+                const records = {
+                    'Manchester United-Liverpool': 0.6,
+                    'Manchester City-Chelsea': 0.7,
+                    'Arsenal-Tottenham': 0.5
+                };
+                return records[`${homeTeam}-${awayTeam}`] || 0.5;
+            }
+
+            getInjuryImpact(homeTeam, awayTeam) {
+                // Simulated injury impact
+                const injuries = {
+                    'Manchester United': 0.9,
+                    'Liverpool': 0.95,
+                    'Manchester City': 0.98,
+                    'Chelsea': 0.85,
+                    'Arsenal': 0.9,
+                    'Tottenham': 0.95
+                };
+                return (injuries[homeTeam] || 1.0) / (injuries[awayTeam] || 1.0);
+            }
+
+            predictMatch(match) {
+                const features = this.calculateFeatures(match);
+                if (!features) return null;
+
+                // Calculate weighted score
+                let homeScore = 0;
+                let totalWeight = 0;
+                
+                Object.keys(features).forEach(feature => {
+                    if (this.model.weights[feature]) {
+                        homeScore += features[feature] * this.model.weights[feature];
+                        totalWeight += this.model.weights[feature];
+                    }
+                });
+
+                // Normalize score
+                homeScore = homeScore / totalWeight;
+                
+                // Calculate probabilities using softmax-like function
+                const homeProb = this.sigmoid(homeScore * 3 - 1.5);
+                const awayProb = this.sigmoid((1 - homeScore) * 3 - 1.5);
+                const drawProb = 1 - Math.abs(homeProb - awayProb) * 0.8;
+
+                // Normalize probabilities
+                const total = homeProb + drawProb + awayProb;
+                const normalizedHomeProb = homeProb / total;
+                const normalizedDrawProb = drawProb / total;
+                const normalizedAwayProb = awayProb / total;
+
+                // Calculate BTTS probability
+                const goalExpectancy = (features.homeStrength + features.awayStrength) / 2;
+                const bttsProb = 1 - Math.exp(-goalExpectancy * 1.5);
+
+                // Determine prediction
+                const probs = [normalizedHomeProb, normalizedDrawProb, normalizedAwayProb];
+                const maxProb = Math.max(...probs);
+                const resultIndex = probs.indexOf(maxProb);
+                const results = ['H', 'D', 'A'];
+                const predictedResult = results[resultIndex];
+
+                // Confidence calculation
+                const confidence = maxProb * 0.8 + 0.2; // Scale to 0.6-1.0
+                const bttsConfidence = Math.abs(bttsProb - 0.5) * 2;
+
+                // Determine if BTTS
+                const predictedBTTS = bttsProb > 0.5;
+
+                // Calculate value bets
+                const recommendations = this.calculateValueBets(
+                    normalizedHomeProb, normalizedDrawProb, normalizedAwayProb,
+                    bttsProb, match.odds
+                );
+
+                return {
+                    matchId: match.id,
+                    homeTeam: match.homeTeam,
+                    awayTeam: match.awayTeam,
+                    league: match.league,
+                    time: match.time,
+                    predictedResult,
+                    predictedBTTS,
+                    resultProbabilities: {
+                        home: normalizedHomeProb,
+                        draw: normalizedDrawProb,
+                        away: normalizedAwayProb
+                    },
+                    bttsProbability: bttsProb,
+                    confidence: confidence,
+                    bttsConfidence: bttsConfidence,
+                    odds: match.odds,
+                    recommendations: recommendations,
+                    features: features,
+                    calculatedAt: new Date().toISOString()
+                };
+            }
+
+            sigmoid(x) {
+                return 1 / (1 + Math.exp(-x));
+            }
+
+            calculateValueBets(homeProb, drawProb, awayProb, bttsProb, odds) {
+                const recommendations = [];
+                
+                // Calculate implied probabilities from odds
+                const impliedHome = odds.home ? 1 / odds.home : null;
+                const impliedDraw = odds.draw ? 1 / odds.draw : null;
+                const impliedAway = odds.away ? 1 / odds.away : null;
+                const impliedBttsYes = odds.bttsYes ? 1 / odds.bttsYes : null;
+                const impliedBttsNo = odds.bttsNo ? 1 / odds.bttsNo : null;
+
+                // Check for value bets
+                if (impliedHome && homeProb > impliedHome * 1.1) {
+                    recommendations.push({
+                        type: 'match_result',
+                        bet: 'home_win',
+                        confidence: homeProb,
+                        value: homeProb - impliedHome,
+                        odds: odds.home,
+                        stake: this.calculateKellyStake(homeProb, odds.home)
+                    });
+                }
+
+                if (impliedDraw && drawProb > impliedDraw * 1.1) {
+                    recommendations.push({
+                        type: 'match_result',
+                        bet: 'draw',
+                        confidence: drawProb,
+                        value: drawProb - impliedDraw,
+                        odds: odds.draw,
+                        stake: this.calculateKellyStake(drawProb, odds.draw)
+                    });
+                }
+
+                if (impliedAway && awayProb > impliedAway * 1.1) {
+                    recommendations.push({
+                        type: 'match_result',
+                        bet: 'away_win',
+                        confidence: awayProb,
+                        value: awayProb - impliedAway,
+                        odds: odds.away,
+                        stake: this.calculateKellyStake(awayProb, odds.away)
+                    });
+                }
+
+                if (impliedBttsYes && bttsProb > impliedBttsYes * 1.1) {
+                    recommendations.push({
+                        type: 'btts',
+                        bet: 'yes',
+                        confidence: bttsProb,
+                        value: bttsProb - impliedBttsYes,
+                        odds: odds.bttsYes,
+                        stake: this.calculateKellyStake(bttsProb, odds.bttsYes)
+                    });
+                }
+
+                if (impliedBttsNo && (1 - bttsProb) > impliedBttsNo * 1.1) {
+                    recommendations.push({
+                        type: 'btts',
+                        bet: 'no',
+                        confidence: 1 - bttsProb,
+                        value: (1 - bttsProb) - impliedBttsNo,
+                        odds: odds.bttsNo,
+                        stake: this.calculateKellyStake(1 - bttsProb, odds.bttsNo)
+                    });
+                }
+
+                return recommendations;
+            }
+
+            calculateKellyStake(probability, odds) {
+                const b = odds - 1;
+                const q = 1 - probability;
+                const kelly = (probability * b - q) / b;
+                return Math.max(kelly * 0.25, 0); // Quarter Kelly
+            }
+
+            runAllPredictions() {
+                console.log("Running predictions for all matches...");
+                predictionsData = matchesData.map(match => this.predictMatch(match)).filter(p => p !== null);
+                this.predictions = predictionsData;
+                this.updateHistory();
+                this.updateSystemStats();
+                return predictionsData;
+            }
+
+            updateHistory() {
+                const historyEntry = {
+                    date: new Date().toISOString(),
+                    totalPredictions: this.predictions.length,
+                    averageConfidence: this.predictions.reduce((sum, p) => sum + p.confidence, 0) / this.predictions.length,
+                    valueBets: this.predictions.reduce((sum, p) => sum + p.recommendations.length, 0)
+                };
+                this.history.push(historyEntry);
+                
+                // Keep only last 100 entries
+                if (this.history.length > 100) {
+                    this.history.shift();
+                }
+            }
+
+            updateSystemStats() {
+                document.getElementById('totalMatches').textContent = matchesData.length;
+                document.getElementById('totalPredictions').textContent = this.predictions.length;
+                document.getElementById('valueBets').textContent = this.predictions.reduce((sum, p) => sum + p.recommendations.length, 0);
+                document.getElementById('aiAccuracy').textContent = `${(this.model.accuracy * 100).toFixed(1)}%`;
+                document.getElementById('accuracyBar').style.width = `${this.model.accuracy * 100}%`;
+            }
+
+            addTeam(teamData) {
+                const { name, strength, form, homeAdvantage } = teamData;
+                this.teams[name] = {
+                    strength: parseInt(strength) || 50,
+                    form: parseFloat(form) || 0.5,
+                    homeAdvantage: parseFloat(homeAdvantage) || 0.5
+                };
+                
+                // Add to teamsData array
+                teamsData.push({
+                    name,
+                    strength: parseInt(strength) || 50,
+                    form: parseFloat(form) || 0.5,
+                    homeAdvantage: parseFloat(homeAdvantage) || 0.5
+                });
+                
+                console.log(`Team ${name} added successfully`);
+                this.updateSystemStats();
+            }
+
+            retrainModel() {
+                console.log("Retraining AI model...");
+                // Simulate training process
+                this.model.accuracy += 0.01; // Small improvement
+                if (this.model.accuracy > 0.95) this.model.accuracy = 0.95;
+                
+                this.model.lastTrained = new Date();
+                this.updateSystemStats();
+                
+                // Update learning logs
+                this.addLearningLog("Model retraining completed successfully");
+                this.addLearningLog(`New accuracy: ${(this.model.accuracy * 100).toFixed(1)}%`);
+                
+                return this.model.accuracy;
+            }
+
+            addLearningLog(message) {
+                const logsContainer = document.getElementById('learningLogs');
+                if (logsContainer) {
+                    const logEntry = document.createElement('div');
+                    logEntry.className = 'alert alert-success';
+                    logEntry.innerHTML = `
+                        <span>${new Date().toLocaleTimeString()}</span>
+                        <span>${message}</span>
+                    `;
+                    logsContainer.prepend(logEntry);
+                    
+                    // Keep only last 5 logs
+                    const logs = logsContainer.querySelectorAll('.alert');
+                    if (logs.length > 5) {
+                        logs[logs.length - 1].remove();
+                    }
+                }
+            }
+        }
+
+        // Initialize the system when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            soccerAI = new SoccerPredictionAI();
+            initializeCharts();
+            loadMatchesTable();
+            runPredictions();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.textContent.toLowerCase().replace(' ', '');
+                    switchTab(tabId);
+                });
+            });
+
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    const target = this.getAttribute('href').substring(1);
+                    switchTab(target);
+                });
+            });
+        }
+
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Activate selected tab
+            let targetTab;
+            switch(tabName) {
+                case 'dashboard':
+                case 'predictions':
+                    targetTab = 'predictionsTab';
+                    document.querySelector('.tab:nth-child(1)').classList.add('active');
+                    break;
+                case 'matches':
+                    targetTab = 'matchesTab';
+                    document.querySelector('.tab:nth-child(2)').classList.add('active');
+                    break;
+                case 'analysis':
+                    targetTab = 'analysisTab';
+                    document.querySelector('.tab:nth-child(3)').classList.add('active');
+                    break;
+                case 'performance':
+                    targetTab = 'performanceTab';
+                    document.querySelector('.tab:nth-child(4)').classList.add('active');
+                    break;
+                default:
+                    targetTab = 'predictionsTab';
+                    document.querySelector('.tab:nth-child(1)').classList.add('active');
+            }
+
+            document.getElementById(targetTab).classList.add('active');
+        }
+
+        function runPredictions() {
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'block';
+
+            setTimeout(() => {
+                predictionsData = soccerAI.runAllPredictions();
+                displayPredictions();
+                spinner.style.display = 'none';
+                
+                // Show success message
+                showAlert('Predictions generated successfully!', 'success');
+            }, 1000);
+        }
+
+        function displayPredictions() {
+            const container = document.getElementById('predictionsContainer');
+            container.innerHTML = '';
+
+            predictionsData.forEach(prediction => {
+                const predictionElement = createPredictionCard(prediction);
+                container.appendChild(predictionElement);
+            });
+
+            if (predictionsData.length === 0) {
+                container.innerHTML = '<div class="alert alert-warning">No predictions available. Run predictions first.</div>';
+            }
+        }
+
+        function createPredictionCard(prediction) {
+            const card = document.createElement('div');
+            card.className = 'prediction-card';
+            
+            const homeColor = getResultColor(prediction.resultProbabilities.home, prediction.predictedResult === 'H');
+            const drawColor = getResultColor(prediction.resultProbabilities.draw, prediction.predictedResult === 'D');
+            const awayColor = getResultColor(prediction.resultProbabilities.away, prediction.predictedResult === 'A');
+            const bttsColor = prediction.predictedBTTS ? 'var(--success-color)' : 'var(--accent-color)';
+
+            card.innerHTML = `
+                <div class="match-info">
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-logo">${prediction.homeTeam.substring(0, 2)}</div>
+                            <strong>${prediction.homeTeam}</strong>
+                        </div>
+                        <div class="vs">vs</div>
+                        <div class="team">
+                            <div class="team-logo">${prediction.awayTeam.substring(0, 2)}</div>
+                            <strong>${prediction.awayTeam}</strong>
+                        </div>
+                    </div>
+                    <div class="match-meta">
+                        <span>${prediction.league} • ${prediction.time}</span>
+                    </div>
+                </div>
+
+                <div class="prediction-details">
+                    <div class="prediction-item">
+                        <div class="label">Predicted Result</div>
+                        <div class="value" style="color: ${getPredictionColor(prediction.predictedResult)}">
+                            ${getResultText(prediction.predictedResult)}
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill" style="width: ${prediction.confidence * 100}%; background: ${getConfidenceColor(prediction.confidence)}"></div>
+                        </div>
+                    </div>
+
+                    <div class="prediction-item">
+                        <div class="label">Both Teams to Score</div>
+                        <div class="value" style="color: ${bttsColor}">
+                            ${prediction.predictedBTTS ? 'YES' : 'NO'}
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill" style="width: ${prediction.bttsConfidence * 100}%; background: ${getConfidenceColor(prediction.bttsConfidence)}"></div>
+                        </div>
+                    </div>
+
+                    <div class="prediction-item">
+                        <div class="label">Probability Distribution</div>
+                        <div class="value">
+                            H: ${(prediction.resultProbabilities.home * 100).toFixed(1)}% |
+                            D: ${(prediction.resultProbabilities.draw * 100).toFixed(1)}% |
+                            A: ${(prediction.resultProbabilities.away * 100).toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+
+                ${prediction.recommendations.length > 0 ? `
+                <div class="recommendations">
+                    <div class="label" style="margin-bottom: 10px; font-weight: 600;">Value Bet Recommendations:</div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        ${prediction.recommendations.map(rec => `
+                            <div style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; font-size: 0.9rem;">
+                                <strong>${rec.bet.toUpperCase()}</strong><br>
+                                Odds: ${rec.odds.toFixed(2)} | Value: ${rec.value.toFixed(3)}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="showDetailedAnalysis(${prediction.matchId})" style="padding: 8px 16px; font-size: 0.9rem;">
+                        Detailed Analysis
+                    </button>
+                    <button class="btn btn-success" onclick="placeBet(${prediction.matchId})" style="padding: 8px 16px; font-size: 0.9rem;">
+                        Place Bet
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function getResultText(result) {
+            const results = {
+                'H': 'HOME WIN',
+                'D': 'DRAW',
+                'A': 'AWAY WIN'
+            };
+            return results[result] || result;
+        }
+
+        function getPredictionColor(result) {
+            const colors = {
+                'H': '#27ae60',
+                'D': '#f39c12',
+                'A': '#e74c3c'
+            };
+            return colors[result] || '#666';
+        }
+
+        function getResultColor(probability, isPredicted) {
+            if (isPredicted) return '#27ae60';
+            if (probability > 0.4) return '#f39c12';
+            return '#e74c3c';
+        }
+
+        function getConfidenceColor(confidence) {
+            if (confidence >= 0.8) return '#27ae60';
+            if (confidence >= 0.6) return '#f39c12';
+            return '#e74c3c';
+        }
+
+        function loadMatchesTable() {
+            const tbody = document.getElementById('matchesTableBody');
+            tbody.innerHTML = '';
+
+            matchesData.forEach(match => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${match.time}</td>
+                    <td><strong>${match.homeTeam}</strong></td>
+                    <td><strong>${match.awayTeam}</strong></td>
+                    <td>${match.league}</td>
+                    <td>${match.odds.home}/${match.odds.draw}/${match.odds.away}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="predictSingleMatch(${match.id})" style="padding: 5px 10px; font-size: 0.8rem;">
+                            Predict
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function predictSingleMatch(matchId) {
+            const match = matchesData.find(m => m.id === matchId);
+            if (match) {
+                const prediction = soccerAI.predictMatch(match);
+                if (prediction) {
+                    predictionsData = predictionsData.filter(p => p.matchId !== matchId);
+                    predictionsData.push(prediction);
+                    displayPredictions();
+                    showAlert(`Prediction for ${match.homeTeam} vs ${match.awayTeam} generated!`, 'success');
+                }
+            }
+        }
+
+        function showDetailedAnalysis(matchId) {
+            const prediction = predictionsData.find(p => p.matchId === matchId);
+            if (!prediction) return;
+
+            const modal = document.getElementById('predictionModal');
+            const details = document.getElementById('predictionDetails');
+
+            details.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3>${prediction.homeTeam} vs ${prediction.awayTeam}</h3>
+                    <p>${prediction.league} • ${prediction.time}</p>
+                </div>
+
+                <div class="cards-grid" style="grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">AI Confidence Score</div>
+                        </div>
+                        <div class="card-value">${(prediction.confidence * 100).toFixed(1)}%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${prediction.confidence * 100}%; background: ${getConfidenceColor(prediction.confidence)}"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">BTTS Confidence</div>
+                        </div>
+                        <div class="card-value">${(prediction.bttsConfidence * 100).toFixed(1)}%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${prediction.bttsConfidence * 100}%; background: ${getConfidenceColor(prediction.bttsConfidence)}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="card-header">
+                        <div class="card-title">Feature Analysis</div>
+                    </div>
+                    <div id="featureAnalysis">
+                        ${Object.entries(prediction.features || {}).map(([key, value]) => `
+                            <div style="margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span>${formatFeatureName(key)}</span>
+                                    <span>${(value * 100).toFixed(1)}%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${value * 100}%; background: ${getFeatureColor(value)}"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Value Bet Analysis</div>
+                    </div>
+                    ${prediction.recommendations.length > 0 ? `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Bet Type</th>
+                                    <th>Selection</th>
+                                    <th>Probability</th>
+                                    <th>Odds</th>
+                                    <th>Value</th>
+                                    <th>Recommended Stake</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${prediction.recommendations.map(rec => `
+                                    <tr>
+                                        <td>${rec.type.replace('_', ' ').toUpperCase()}</td>
+                                        <td><strong>${rec.bet.toUpperCase()}</strong></td>
+                                        <td>${(rec.confidence * 100).toFixed(1)}%</td>
+                                        <td>${rec.odds.toFixed(2)}</td>
+                                        <td>${rec.value.toFixed(3)}</td>
+                                        <td>${(rec.stake * 100).toFixed(1)}%</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    ` : '<p style="padding: 20px; text-align: center; color: #666;">No value bets detected for this match.</p>'}
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function formatFeatureName(feature) {
+            const names = {
+                homeStrength: 'Home Team Strength',
+                awayStrength: 'Away Team Strength',
+                homeForm: 'Home Team Form',
+                awayForm: 'Away Team Form',
+                homeAdvantage: 'Home Advantage',
+                weatherImpact: 'Weather Impact',
+                pitchCondition: 'Pitch Condition',
+                h2hRecord: 'Head-to-Head Record',
+                injuryImpact: 'Injury Impact'
+            };
+            return names[feature] || feature;
+        }
+
+        function getFeatureColor(value) {
+            if (value >= 0.8) return '#27ae60';
+            if (value >= 0.6) return '#f39c12';
+            if (value >= 0.4) return '#3498db';
+            return '#95a5a6';
+        }
+
+        function showAddTeamModal() {
+            document.getElementById('addTeamModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function addNewTeam(event) {
+            event.preventDefault();
+            
+            const teamName = document.getElementById('teamName').value;
+            const strengthRating = document.getElementById('strengthRating').value;
+            
+            if (!teamName) {
+                showAlert('Team name is required!', 'danger');
+                return;
+            }
+
+            soccerAI.addTeam({
+                name: teamName,
+                strength: strengthRating,
+                form: (strengthRating / 100).toFixed(2),
+                homeAdvantage: 0.5
+            });
+
+            // Clear form
+            document.getElementById('addTeamForm').reset();
+            closeModal('addTeamModal');
+            showAlert(`Team ${teamName} added successfully!`, 'success');
+            
+            // Update matches table
+            loadMatchesTable();
+        }
+
+        function scrapeNewData() {
+            showAlert('Scraping new match data...', 'warning');
+            
+            // Simulate scraping delay
+            setTimeout(() => {
+                // Add new sample match
+                const newMatch = {
+                    id: matchesData.length + 1,
+                    homeTeam: 'New Team',
+                    awayTeam: 'Another Team',
+                    league: 'Test League',
+                    time: '14:00',
+                    odds: { home: 2.0, draw: 3.0, away: 3.5, bttsYes: 1.9, bttsNo: 1.9 },
+                    weather: 'Clear',
+                    pitch: 'Good'
+                };
+                
+                matchesData.push(newMatch);
+                loadMatchesTable();
+                showAlert('New match data scraped successfully!', 'success');
+            }, 1500);
+        }
+
+        function retrainAI() {
+            showAlert('Retraining AI model...', 'warning');
+            
+            setTimeout(() => {
+                const newAccuracy = soccerAI.retrainModel();
+                showAlert(`AI model retrained! New accuracy: ${(newAccuracy * 100).toFixed(1)}%`, 'success');
+                
+                // Update accuracy display
+                document.getElementById('aiAccuracy').textContent = `${(newAccuracy * 100).toFixed(1)}%`;
+                document.getElementById('accuracyBar').style.width = `${newAccuracy * 100}%`;
+                
+                // Update charts
+                updatePerformanceChart();
+            }, 2000);
+        }
+
+        function placeBet(matchId) {
+            const prediction = predictionsData.find(p => p.matchId === matchId);
+            if (prediction && prediction.recommendations.length > 0) {
+                showAlert(`Bet placed successfully for ${prediction.homeTeam} vs ${prediction.awayTeam}!`, 'success');
+            } else {
+                showAlert('No value bets available for this match.', 'warning');
+            }
+        }
+
+        function filterMatches() {
+            const leagueFilter = document.getElementById('leagueFilter').value;
+            let filteredMatches = matchesData;
+            
+            if (leagueFilter !== 'all') {
+                filteredMatches = matchesData.filter(match => 
+                    match.league.toLowerCase().includes(leagueFilter.toLowerCase())
+                );
+            }
+            
+            // Update predictions display
+            const filteredPredictions = predictionsData.filter(prediction =>
+                filteredMatches.some(match => match.id === prediction.matchId)
+            );
+            
+            const container = document.getElementById('predictionsContainer');
+            container.innerHTML = '';
+            
+            if (filteredPredictions.length === 0) {
+                container.innerHTML = '<div class="alert alert-warning">No predictions match the filter criteria.</div>';
+            } else {
+                filteredPredictions.forEach(prediction => {
+                    const predictionElement = createPredictionCard(prediction);
+                    container.appendChild(predictionElement);
+                });
+            }
+        }
+
+        function showAlert(message, type) {
+            // Remove existing alerts
+            const existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(alert => {
+                if (alert.parentElement.id !== 'systemStatus') {
+                    alert.remove();
+                }
+            });
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <span>${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : '❌'}</span>
+                <span>${message}</span>
+            `;
+            
+            // Insert at the top of the dashboard
+            const dashboard = document.querySelector('.dashboard');
+            dashboard.insertBefore(alertDiv, dashboard.firstChild);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Chart Initialization
+        function initializeCharts() {
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            charts.performance = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Accuracy %',
+                        data: [65, 68, 72, 75, 76, 77],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Accuracy Chart
+            const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+            charts.accuracy = new Chart(accuracyCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Last Week', 'Last Month', 'Last 3 Months', 'All Time'],
+                    datasets: [{
+                        label: 'Accuracy %',
+                        data: [75, 76, 74, 76.5],
+                        backgroundColor: ['#27ae60', '#f39c12', '#3498db', '#9b59b6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Profit Chart
+            const profitCtx = document.getElementById('profitChart').getContext('2d');
+            charts.profit = new Chart(profitCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                    datasets: [{
+                        label: 'Profit/Loss',
+                        data: [100, 150, 120, 180, 200],
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updatePerformanceChart() {
+            if (charts.performance) {
+                // Add new data point
+                const newData = soccerAI.model.accuracy * 100;
+                charts.performance.data.labels.push(new Date().toLocaleDateString('en-US', { month: 'short' }));
+                charts.performance.data.datasets[0].data.push(newData);
+                
+                // Keep only last 10 points
+                if (charts.performance.data.labels.length > 10) {
+                    charts.performance.data.labels.shift();
+                    charts.performance.data.datasets[0].data.shift();
+                }
+                
+                charts.performance.update();
+            }
+        }
+
+        // Feature Importance Visualization
+        function renderFeatureImportance() {
+            const container = document.getElementById('featureImportance');
+            const features = soccerAI.model.weights;
+            
+            let html = '<div style="padding: 10px;">';
+            Object.entries(features).forEach(([feature, weight]) => {
+                const percentage = (weight * 100).toFixed(1);
+                html += `
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${formatFeatureName(feature)}</span>
+                            <span>${percentage}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background: ${getFeatureColor(weight)}"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Initialize feature importance
+        setTimeout(() => {
+            renderFeatureImportance();
+        }, 1000);
+
+        // Performance Table
+        function loadPerformanceTable() {
+            const tableBody = document.getElementById('performanceTable');
+            const sampleData = [
+                { date: '2024-01-10', predictions: 15, correct: 11, accuracy: 73.3, profit: 120 },
+                { date: '2024-01-09', predictions: 12, correct: 9, accuracy: 75.0, profit: 85 },
+                { date: '2024-01-08', predictions: 18, correct: 14, accuracy: 77.8, profit: 150 },
+                { date: '2024-01-07', predictions: 10, correct: 8, accuracy: 80.0, profit: 95 },
+                { date: '2024-01-06', predictions: 16, correct: 12, accuracy: 75.0, profit: 110 }
+            ];
+
+            tableBody.innerHTML = sampleData.map(row => `
+                <tr>
+                    <td>${row.date}</td>
+                    <td>${row.predictions}</td>
+                    <td>${row.correct}</td>
+                    <td>${row.accuracy}%</td>
+                    <td style="color: ${row.profit > 0 ? 'var(--success-color)' : 'var(--accent-color)'}">
+                        $${row.profit}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load performance table
+        loadPerformanceTable();
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+    </script>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
