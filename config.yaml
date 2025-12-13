@@ -1,0 +1,58 @@
+database:
+  host: localhost
+  port: 5432
+  name: soccer_predictor
+  user: postgres
+  password: your_password
+  pool_size: 20
+
+scrapers:
+  hollywoodbets:
+    url: "https://www.hollywoodbets.net"
+    enabled: true
+    rate_limit_delay: 2.0
+  betway:
+    url: "https://www.betway.co.za"
+    enabled: true
+    rate_limit_delay: 2.0
+  football_data:
+    enabled: true
+    sources:
+      - name: "ESPN"
+        url: "https://www.espn.com/soccer"
+      - name: "WhoScored"
+        url: "https://www.whoscored.com"
+      - name: "Transfermarkt"
+        url: "https://www.transfermarkt.com"
+
+models:
+  result_model:
+    type: "ensemble"
+    path: "models/result_model.pkl"
+    retrain_frequency: 7  # days
+  btts_model:
+    type: "ensemble"
+    path: "models/btts_model.pkl"
+    retrain_frequency: 7
+
+prediction:
+  min_confidence: 0.65
+  value_threshold: 1.1  # Minimum value ratio for recommendations
+  max_recommendations_per_match: 3
+
+logging:
+  level: "INFO"
+  file: "logs/soccer_predictor.log"
+  max_size_mb: 100
+  backup_count: 5
+
+api:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["*"]
+
+monitoring:
+  prometheus_enabled: true
+  metrics_port: 9090
+  health_check_interval: 300  # seconds
